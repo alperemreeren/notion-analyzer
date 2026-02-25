@@ -1,0 +1,15 @@
+{
+  "name": "notion-analyzer",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@vercel/node": "^3.0.0",
+    "@types/node": "^20.11.0"
+  }
+}

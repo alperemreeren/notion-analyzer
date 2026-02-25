@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: Notion Analyzer Gateway
+  version: 1.0.0
+servers:
+  - url: https://YOUR_VERCEL_DOMAIN
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+  /analyze:
+    post:
+      operationId: analyzeNotion
+      summary: Read and analyze Notion content (read-only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyzeRequest"
+      responses:
+        "200":
+          description: Analysis result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyzeResponse"
+        "400":
+          description: Validation error
+        "401":
+          description: Unauthorized
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    AnalyzeRequest:
+      type: object
+      required: [targets]
+      properties:
+        mode:
+          type: string
+          enum: [project, generic]
+          default: project
+        instructions:
+          type: string
+        focus:
+          type: array
+          items: { type: string }
+        targets:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/PageTarget"
+              - $ref: "#/components/schemas/DatabaseTarget"
+    PageTarget:
+      type: object
+      required: [type, id]
+      properties:
+        type: { const: page }
+        id: { type: string }
+    DatabaseTarget:
+      type: object
+      required: [type, id]
+      properties:
+        type: { const: database }
+        id: { type: string }
+        query:
+          type: object
+          additionalProperties: true
+    AnalyzeResponse:
+      type: object
+      required: [ok, summary, analysis, notion_snapshot]
+      properties:
+        ok: { type: boolean }
+        summary: { type: string }
+        analysis:
+          type: object
+          additionalProperties: true
+        notion_snapshot:
+          type: object
+          additionalProperties: true
