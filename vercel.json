@@ -1,14 +1,8 @@
 {
   "version": 2,
-  "routes": [
-    {
-      "src": "/health",
-      "dest": "/api/health.ts"
-    },
-    {
-      "src": "/analyze",
-      "dest": "/api/analyze.ts"
-    }
+  "rewrites": [
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/analyze", "destination": "/api/analyze" }
   ],
   "headers": [
     {
